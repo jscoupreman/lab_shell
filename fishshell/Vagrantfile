@@ -1,0 +1,20 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "debian/stretch64"
+
+    config.vm.provision "shell", inline: <<-SHELL
+        apt-get install -y git
+        apt-get install -y build-essential cmake ncurses-dev libncurses5-dev libpcre2-dev gettext
+        git clone https://github.com/fish-shell/fish-shell.git
+        cd fish-shell
+        mkdir build
+        cd build
+        cmake ..
+        make
+        make install
+        echo /usr/local/bin/fish | sudo tee -a /etc/shells
+        chsh -s /usr/local/bin/fish
+    SHELL
+end
